@@ -1,0 +1,15 @@
+:name: Weyland Corp Compliance policy 4000
+:rules:
+  - :description: /etc/sudoers is secure
+    :resources:
+      :File['/etc/sudoers']:
+        :ensure: present
+        :mode: "0440"
+        :group: 0
+        :owner: 0
+  - :description: Telnet isn't running and it's port is closed
+    :resources:
+      :Service['telnetd']:
+        :ensure: absent
+      :Port['23']:
+        :open: false

@@ -1,0 +1,11 @@
+:name: Shadow files on OSX
+:confine:
+  :operatingsystem: Darwin
+:rules:
+  - :description: Our pasword hashes are A-OK
+    :resources:
+      :File['/etc/master.passwd']:
+        :ensure: present
+        :mode: "0600"
+        :group: 0
+        :owner: 0

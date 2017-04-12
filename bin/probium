@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+require 'runner'
+
+begin
+  runner = Runner.new
+  puts runner.run
+  exit runner.exit_code
+rescue StandardError => e
+  puts e
+  exit 1
+end

@@ -1,0 +1,7 @@
+---
+:name: "The super cool test policy"
+:rules:
+  - :description: Test Rule
+    :resources:
+      :Rspec['rspec']:
+        :ensure: present

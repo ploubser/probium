@@ -1,0 +1,11 @@
+:name: Shadow files on linux
+:confine:
+  :operatingsystem: Linux
+:rules:
+  - :description: Our pasword hashes are A-OK
+    :resources:
+      :File['/etc/shadow']:
+        :ensure: present
+        :mode: "0600"
+        :group: 0
+        :owner: 0
