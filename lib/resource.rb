@@ -16,7 +16,7 @@ class Resource
   attr_reader :puppet_resource
 
   def initialize(title, properties)
-    if title.to_s =~ /^([A-Z].+)\[(.+)\]$/
+    if title.to_s =~ /^([A-Z].+?)\[(.+?)\]$/
       @type = $1.to_s.downcase.to_sym
       @name =$2.to_s.gsub(/'|"/, '')
     else

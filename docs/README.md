@@ -80,6 +80,7 @@ create new resource types and modify existing resources.
 Currently Probium has the following resource extensions:
 
 - [port](docs/extensions/port.md)
+- [port](docs/extensions/file.md)
 
 ## Putting it all together
 
