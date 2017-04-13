@@ -31,11 +31,13 @@ class Extensions
   end
 
   def create_resource(name, &block)
-    @@extensions[name] = { :resource => block }
+    @@extensions[name] ||= {}
+    @@extensions[name][:resource] = block
   end
 
   def compare_fn(name, &block)
-    @@extensions[name] = { :compare_fn => block }
+    @@extensions[name] ||= {}
+    @@extensions[name][:compare_fn] = block
   end
 
   def validate_location(location)
