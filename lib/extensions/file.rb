@@ -1,11 +1,19 @@
+def compare(name, expected, actual)
+  if name == :ensure
+    return actual != :absent && actual != 'absent'
+  end
+
+  return actual == expected
+end
+
 compare_fn(:file) do |name, expected, actual|
   result = true
 
   unless actual.is_a? Array
-    result = expected == actual
+    result = compare(name, expected, actual)
   else
     actual.each do |a|
-      unless expected == a
+      unless compare(name, expected, actual)
         result = false
         break
       end

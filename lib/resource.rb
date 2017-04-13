@@ -28,12 +28,8 @@ class Resource
 
     @compare_fn = lambda do |name, expected, actual|
       if name == :ensure
-        if expected == 'present'
+        if expected == 'present' || expected == :present
           return actual != :absent
-        end
-
-        if expected == 'absent'
-          expected = expected.to_sym # user can express it as 'absent' or :absent
         end
       end
 
@@ -42,13 +38,33 @@ class Resource
 
     create_resource
   end
-
   def check_properties
     result = { :success => true,
                :title => @title,
                :properties => [] }
     @expected_properties.each do |property, value|
-      status = @compare_fn.call(property, value, @puppet_resource[property])
+      invert = false
+      old_value = nil
+
+      if value =~ /^not\((.+)\)$/
+        old_value = value
+        value = $1
+        invert = true
+      end
+
+      status = @compare_fn.call(property,
+                                transform_expected_value(value, @puppet_resource[property]),
+                                @puppet_resource[property])
+
+      unless (status.is_a? TrueClass) || (status.is_a? FalseClass)
+        raise ResourceError, "Cannot load resource '#{@title}'. Custom compare function returned a non Boolean value"
+      end
+
+      if invert
+        value = old_value
+        status = !status
+      end
+
       result[:success] = false unless status
       result[:properties] << { :name => property,
                                :expected => value,
@@ -86,5 +102,27 @@ class Resource
       end
     end
     Log.debug { "Loaded resource #{@title} in #{Time.now - start_time}" }
+  end
+
+  def transform_expected_value(expected_value, actual_value)
+    begin
+      case actual_value
+      when Fixnum
+        expected_value.to_i
+      when Float
+        expected_value.to_f
+      when Symbol
+        expected_value.to_sym
+      when String
+        expected_value.to_s
+      when Array
+        transform_expected_value(expected_value, actual_value.first)
+      else
+        expected_value
+      end
+    rescue StandardError => e
+      error = "Cannot convert expected value '#{expected_value.inspect}' to compare it with '#{actual_value.inspect}'"
+      raise ResourceError, error
+    end
   end
 end
