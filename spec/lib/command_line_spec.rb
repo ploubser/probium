@@ -38,6 +38,20 @@ describe CommandLine do
       CommandLine.parse!(options)
       expect(options[:extensions_path]).to eq('/rspec/extensions')
     end
+
+    it 'parses --debug' do
+      options = {}
+      ARGV << '--debug'
+      CommandLine.parse!(options)
+      expect(options[:debug]).to be true
+    end
+
+    it 'parses --no-color' do
+      options = {}
+      ARGV << '--no-color'
+      CommandLine.parse!(options)
+      expect(options[:color]).to be false
+    end
   end
 
   describe 'policy!' do

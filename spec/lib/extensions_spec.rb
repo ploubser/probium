@@ -8,6 +8,24 @@ describe Extensions do
     it 'validates and loads the extensions' do
       expect { Extensions.new(File.join(File.dirname(__FILE__), '../', 'fixtures')) }.to_not raise_error
     end
+
+    it 'raises if the location does not exist' do
+      allow(File).to receive(:exist?).and_return(false)
+      expect { Extensions.new }.to raise_error /does not exist/
+    end
+
+    it 'raises when the location is not a directory' do
+      allow(File).to receive(:exist?).and_return(true)
+      allow(File).to receive(:directory?).and_return(false)
+      expect { Extensions.new }.to raise_error /not a directory/
+    end
+
+    it 'raises when it cannot read the file' do
+      allow(File).to receive(:read).and_raise('explosion')
+      expect do
+        Extensions.new(File.join(File.dirname(__FILE__), '../', 'fixtures'))
+      end.to raise_error /Cannot load extension file/
+    end
   end
 
   describe '#[]' do
