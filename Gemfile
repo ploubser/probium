@@ -7,4 +7,4 @@ gem 'rainbow'
 gem 'jgrep'
 
 gem 'simplecov', :require => false, :group => :test
-gem 'rubocop', '~> 0.39.0', :platforms => [:ruby]
+gem 'rubocop', '~> 0.58.1', :platforms => [:ruby]
